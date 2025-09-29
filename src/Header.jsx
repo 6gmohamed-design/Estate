@@ -1,13 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import logo from "./assets/logo (2).png";
 
 const Header = () => {
+  const { ref, inView } = useInView({
+    triggerOnce: false,
+    threshold: 0.1,
+  });
+
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: -30 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -30 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -30 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
       className="w-full bg-black px-2 rounded-t-lg shadow-lg lg:py-2"
     >

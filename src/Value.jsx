@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import data from './Accordian';
 import img from './assets/Value.png';
 
 const Value = () => {
   const [openIndex, setOpenIndex] = useState(null);
+  const { ref, inView } = useInView({
+    triggerOnce: false,
+    threshold: 0.2,
+  });
 
   const toggle = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -12,9 +17,9 @@ const Value = () => {
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -50 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className="flex flex-col lg:flex-row items-center justify-between gap-10 mt-16 max-w-[80%] mx-auto"
       id="our-value"
@@ -45,8 +50,11 @@ const Value = () => {
         {/* Accordion Items */}
         <div className="flex flex-col gap-4">
           {data.map((item, index) => (
-            <div
+            <motion.div
               key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.4, delay: index * 0.2 }}
               className="border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
             >
               <div
@@ -66,7 +74,7 @@ const Value = () => {
                   {item.detail}
                 </div>
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import r1 from "./assets/r1.png";
 import r2 from "./assets/r2.png";
 import r3 from "./assets/r3.png";
@@ -15,6 +16,10 @@ const Residencies = () => {
   ]);
 
   const [move, setMove] = useState(0);
+  const { ref, inView } = useInView({
+    triggerOnce: false,
+    threshold: 0.2,
+  });
 
   const handleMove = (move) => {
     if (move < 0) {
@@ -28,9 +33,9 @@ const Residencies = () => {
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -50 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className='flex flex-col gap-6 max-w-[80%] overflow-hidden mx-auto py-10 bg-white'
       id='residencies'
@@ -63,7 +68,7 @@ const Residencies = () => {
           <motion.div
             key={index}
             initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+            animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.4, delay: index * 0.1 }}
             className='min-w-[300px] bg-white rounded-xl overflow-hidden shadow-md hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 ease-in-out border border-gray-100'
           >

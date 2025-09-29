@@ -1,8 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import img from './assets/contact.jpg';
 
 const Contact = () => {
+  const { ref, inView } = useInView({
+    triggerOnce: false,
+    threshold: 0.2,
+  });
+
   const contactMethods = [
     { icon: 'fa-phone-volume', label: 'Call Now', value: '123456789' },
     { icon: 'fa-envelope', label: 'Email Now', value: 'contact@example.com' },
@@ -10,11 +16,11 @@ const Contact = () => {
     { icon: 'fa-video', label: 'Video Call Now', value: 'Zoom ID: 123456' },
   ];
 
-  return ( 
+  return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -50 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className='w-full py-20 bg-white'
     >
@@ -36,7 +42,7 @@ const Contact = () => {
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
+                animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.4, delay: index * 0.2 }}
                 className='flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-white shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-500 ease-in-out border border-gray-100'
               >

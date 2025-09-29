@@ -4,6 +4,7 @@
  import Residencies from "./Residencies"
  import Value from "./Value"
  import Contact from "./Contact"
+ import Started from "./Started"
  function App() {
     return (
         <div>
@@ -13,6 +14,7 @@
             <Residencies/>
             <Value/>
             <Contact/>
+            <Started/>
         </div>
     )
  }

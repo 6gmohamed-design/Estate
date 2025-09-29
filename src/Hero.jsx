@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import hero from "./assets/hero-image.png";
 import "./index.css";
 
@@ -8,28 +9,36 @@ const Hero = () => {
   const [cities, setCities] = useState(0);
   const [countries, setCountries] = useState(0);
 
+  const { ref, inView } = useInView({
+    triggerOnce: false,
+    threshold: 0.2,
+  });
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProperties((prev) => (prev < 9000 ? prev + 1 : prev));
-      setCities((prev) => (prev < 2000 ? prev + 1 : prev));
-      setCountries((prev) => (prev < 100 ? prev + 1 : prev));
-    }, .00000001);
+    let interval;
+    if (inView) {
+      interval = setInterval(() => {
+        setProperties((prev) => (prev < 9000 ? prev + 50 : prev));
+        setCities((prev) => (prev < 2000 ? prev + 20 : prev));
+        setCountries((prev) => (prev < 100 ? prev + 1 : prev));
+      }, 20);
+    }
     return () => clearInterval(interval);
-  }, [properties, cities, countries]);
+  }, [inView]);
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -50 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className='w-full bg-black text-white h-auto mx-auto py-10'
     >
-      <div className='max-w-[80%] mx-auto flex items-center justify-between lg:gap-15 gap-10 min-[300px]:flex-col  min-[1100px]:flex-row'>
+      <div className='max-w-[80%] mx-auto flex items-center justify-between lg:gap-15 gap-10 min-[300px]:flex-col min-[1100px]:flex-row'>
 
         {/* Text Section */}
-        <div className='w-[50%]  h-auto flex items-center  justify-center flex-col gap-6'>
-          <h1 className='orange-circle text-3xl relative z-40 lg:text-5xl font-extrabold text-transparent bg-clip-text flex items-center flex-wrap justify-center bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-center' >
+        <div className='w-[50%] h-auto flex items-center justify-center flex-col gap-6'>
+          <h1 className='orange-circle text-3xl relative z-40 lg:text-5xl font-extrabold text-transparent bg-clip-text flex items-center flex-wrap justify-center bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-center'>
             Discover the Most Suitable Property
           </h1>
           <p className='text-gray-300 text-base flex items-center flex-wrap relative z-40 lg:text-lg text-center leading-relaxed'>
@@ -37,7 +46,7 @@ const Hero = () => {
           </p>
 
           {/* Search Bar */}
-          <div className='flex items-center gap-2 w-full relative z-40 mx-auto min-[300px]:grid  min-[300px]:grid-cols-1 min-[800px]:grid-cols-2   '>
+          <div className='flex items-center gap-2 w-full relative z-40 mx-auto min-[300px]:grid min-[300px]:grid-cols-1 min-[800px]:grid-cols-2'>
             <input
               type="text"
               placeholder='Search by location or type...'
@@ -66,11 +75,11 @@ const Hero = () => {
         </div>
 
         {/* Image Section */}
-        <div className='w-[50%] lg:w-[35%]   flex items-center justify-center'>
+        <div className='w-[50%] lg:w-[35%] flex items-center justify-center'>
           <img
             src={hero}
             alt="Hero"
-            className='md:w-full min-[300px]:w-[300px]  md:h-[55vh] object-cover rounded-s-full rotate-90 transition-all duration-500 ease-in-out hover:scale-105'
+            className='md:w-full min-[300px]:w-[300px] md:h-[55vh] object-cover rounded-s-full rotate-90 transition-all duration-500 ease-in-out hover:scale-105'
           />
         </div>
 
